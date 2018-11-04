@@ -28,11 +28,11 @@ ssc = StreamingContext(sc, 50)
 ssc.checkpoint("checkpoint_TwitterApp")
 # read data from port 9008
 dataStream = ssc.socketTextStream("localhost",9009)
-lines = dataStream.window(5000)  
+#lines = dataStream.window(5000)  
 
 
 #load the jsons and filter only english. Return json into string
-jsonRDD = lines.map(lambda x: json.loads(x))\
+jsonRDD = dataStream.map(lambda x: json.loads(x))\
                .filter(lambda x: checkLanguage(x))\
                .map(lambda x: json.dumps(x))               
 
