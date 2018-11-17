@@ -1,0 +1,56 @@
+# For printing
+from __future__ import print_function
+
+# For creating a data frame in spark
+from pyspark.ml import Pipeline
+
+# For Naive Bayes classifier
+from pyspark.ml.classification import NaiveBayes, NaiveBayesModel
+
+# For getting pyspark context
+from pyspark import SparkContext
+from pyspark.sql import SparkSession
+
+# For extracting features 
+from pyspark.ml.feature import HashingTF, IDF, Tokenizer, StringIndexer
+from pyspark.ml.feature import IndexToString
+import shutil
+import sys
+import string
+
+# Create the spark context
+sc = SparkSession.builder.appName("ModelTest").getOrCreate()
+
+# Get the data to test the model
+test_tweets = sc.read.csv("/mzero001/test_ml/testdata.manual.2009.06.14.csv", header = False, inferSchema = True)
+
+# Testing with just a 1 row dataframe
+one_tweet = sc.createDataFrame([("4","3","Mon May 11 03:17:40 UTC 2009","kindle2","tpryan","@stellargirl I loooooooovvvvvveee my Kindle2. Not that the DX is cool, but the 2 is fantastic in its own right.")],["_c0","_c1","_c2","_c3","_c4","_c5"])
+
+
+tokenizer = Tokenizer(inputCol = "_c5", outputCol = "words")
+
+# Extract the features
+hashing_tf = HashingTF(numFeatures = 2**16, inputCol = "words", outputCol = "tf")
+idf = IDF(inputCol = "tf", outputCol = "features", minDocFreq = 5)
+labels = StringIndexer(inputCol = "_c0", outputCol = "label")
+lines = Pipeline(stages = [tokenizer, hashing_tf, idf, labels])
+
+# Get the data to test
+line_fit = lines.fit(one_tweet)
+test_model = line_fit.transform(one_tweet)
+
+# Load the trained model
+nb = NaiveBayesModel.load("/mzero001/test_ml/naive_bayes")
+
+# Reindex back to original labels
+converter = IndexToString(inputCol="label", outputCol="sentiment")
+
+# Classify the tweets by sentiment
+result = nb.transform(test_model)
+result.select("label", "features").show()
+converted = converter.transform(result)
+
+converted.select("label","sentiment").show()
+
+sc.close()
