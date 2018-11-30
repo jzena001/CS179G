@@ -1,0 +1,9 @@
+{% if tweet_list %}
+    <ul>
+    {% for tweet in tweet_list %}
+        <li><a href="/sentiment/{{tweet.id}}/">{{tweet.hashtag}}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No hashtag found.</p>
+{% endif %}    
