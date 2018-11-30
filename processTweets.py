@@ -12,7 +12,6 @@ from pyspark.ml.classification import NaiveBayes, NaiveBayesModel, LogisticRegre
 from pyspark.ml.feature import HashingTF, IDF, Tokenizer, StringIndexer
 from pyspark.ml.feature import IndexToString
 
-from pyspark.sql.functions import monotonically_increasing_id
 
 import shutil
 import sys
@@ -20,7 +19,7 @@ import string
 import json
 import re
 
-tweetsDate = "tweets20181107"
+tweetsDate = "tweets20181122-23"
 path = "/bherr006/rddTweets/" + tweetsDate + "*/*"
 
 
@@ -40,6 +39,7 @@ def checkHashEmpty(x):
     return True
 
 def getText(x):
+   coorList = []
    tempList = []
    hashtagList = []
    mentionList = []
@@ -47,16 +47,17 @@ def getText(x):
 
    tweetText = jsonTweet['text'].encode('utf-8')
    tweetText = re.sub(r'[^\x00-\x7F]+','', tweetText)
-   tweetText = re.sub(r'[\n\t\r,]', "", tweetText)
+   tweetText = re.sub(r'[\n\t\r,"|\\]', "", tweetText)
    if (not(checkEmpty(tweetText))):
       return tempList.append("")
    
    tweetID = jsonTweet['id']
   
    tweetUser = jsonTweet['user']['screen_name'].encode('utf-8')
-   tweetUser = re.sub(r'[^\x00-\x7F]+','', tweetUser)
-   tweetUser = re.sub(r'[\n\t\r,]', '', tweetUser)
+   tweetUser = re.sub(r'[^\x20-\x7E]+','', tweetUser)
+   tweetUser = re.sub(r'[\n\t\r]', '', tweetUser)
   
+
    hashtagTempList = tweetText.split(" ")   
    for i in range(len(hashtagTempList)):
       if (hashtagTempList[i].startswith('#') and not(hashtagTempList[i] == "#")):
@@ -87,9 +88,10 @@ def getText(x):
       tweetLatitude = jsonTweet['coordinates']['coordinates'][1]
    else:
       tweetGeo = False
-      tweetLongitude = 0
-      tweetLatitude = 0
+      tweetLongitude = 0.0
+      tweetLatitude = 0.0
    
+
    tempList.append(tweetID)
    tempList.append(tweetUser)
    tempList.append(tweetTimeStamp)
@@ -102,7 +104,6 @@ def getText(x):
    return tempList
 
 
-
 lines = sc.read.text(path).rdd.map(lambda x: x[0])\
           .map(lambda x: getText(x))\
           .filter(lambda x: not(x == None))\
@@ -111,6 +112,7 @@ lines = sc.read.text(path).rdd.map(lambda x: x[0])\
 
 
 df = sc.createDataFrame(lines)
+
 
 tokenizer = Tokenizer(inputCol = "text", outputCol = "words")
 # Extract the features
