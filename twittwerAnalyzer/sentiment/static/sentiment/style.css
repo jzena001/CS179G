@@ -1,0 +1,18 @@
+
+table#search_results {
+    width: 100%;
+    background-color: #f1g1c1;
+}
+
+table#search_results tr:nth-child(even){
+    background-color: #eee;
+}
+
+table#search_results tr:nth-child(odd){
+    background-color: #fff;
+}
+
+table#search_results th {
+    color: white;
+    background-color: black;
+}

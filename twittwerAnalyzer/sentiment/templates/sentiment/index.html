@@ -1,0 +1,46 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'sentiment/style.css' %}">
+
+<header>Welcome to hashtag search</header>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<form method="GET">
+{% csrf_token %}
+<label for="searchterm">Enter the hashtag to search on:</label>
+<input type="text" name="search">
+<br>
+<input type="submit" value="Submit">
+</form>
+<br/><br/>
+
+<table id="search_results">
+    <caption>Search Results</caption>
+    <thead>
+        <tr>
+        <th>Hashtag</th>
+        <th>Mention</th>
+        <th>Tweet ID</th>
+        <th>Tweet Text</th>
+        <th>Sentiment</th>
+        <th>Time Posted</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tweet in tweets %}
+        <tr>
+            <td>{{tweet.hashtag}}</td>
+            <td>{{tweet.mention}}</td>
+            <td>{{tweet.tweetkey}}</td>
+            <td>{{tweet.tweet}}</td>
+            <td>{{tweet.sentiment}}</td>
+            <td>{{tweet.time_stamp}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>complete</td>
+        </tr>
+    </tfoot>
+</table>
