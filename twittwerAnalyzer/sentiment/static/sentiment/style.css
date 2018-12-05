@@ -1,18 +1,101 @@
 
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Style the header */
+header {
+    background-color: #666;
+    padding: 30px;
+    text-align: center;
+    font-size: 35px;
+    color: white;
+}
+
+/* Container for flexboxes */
+section {
+    display: -webkit-flex;
+    display: flex;
+}
+
+/* Style the navigation menu */
+nav {
+    -webkit-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    background: #ccc;
+    padding: 20px;
+}
+
+/* Style the list inside the menu */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+input[type=text] {
+    background-color: white;
+    background-image: url('magnifying_glass_icon.svg');
+    background-position: 10 px 10px;
+    background-repeat: no-repeat;
+    width: 20%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid cyan;
+    border-radius: 4px;
+}
+
+/* Style the content */
+article {
+    -webkit-flex: 3;
+    -ms-flex: 3;
+    flex: 3;
+    background-color: #f1f1f1;
+    padding: 10px;
+}
+
+/* Style the footer */
+footer {
+    background-color: #777;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+/* Responsive layout - makes the menu and the content (inside the section) sit on top of each other instead of next to each other */
+@media (max-width: 600px) {
+    section {
+      -webkit-flex-direction: column;
+      flex-direction: column;
+    }
+}
+
+
 table#search_results {
     width: 100%;
-    background-color: #f1g1c1;
+    background-color: #fff;
+    border-spacing: 5px;
 }
 
 table#search_results tr:nth-child(even){
-    background-color: #eee;
-}
-
-table#search_results tr:nth-child(odd){
     background-color: #fff;
 }
 
+table#search_results tr:nth-child(odd){
+    background-color: #f5f5f5;
+}
+
 table#search_results th {
-    color: white;
-    background-color: black;
+    font-family: Lato-Bold;
+    font-size: 18px;
+    background-color: #6c7ae0;
+    color: #fff;
+}
+
+table#search_results td {
+    border: 1px solid black;
+    padding: 15px;
+    text-align: left;
+    color: black;    
 }

@@ -8,7 +8,7 @@ from django.utils import timezone
 class Tweet(models.Model):
     geo = models.CharField(max_length=6)
     
-    hashtag = models.CharField(max_length=140, 
+    hashtag = models.CharField(max_length=280, 
                                null = True)
                                
     tweetkey = models.DecimalField(max_digits = 19, 
@@ -22,14 +22,14 @@ class Tweet(models.Model):
                                     decimal_places = 6, 
                                     null = True)
                                     
-    mention = models.CharField(max_length=255, 
+    mention = models.CharField(max_length=280, 
                                null = True)
                                
-    tweet = models.CharField(max_length=255)
+    tweet = models.CharField(max_length=1024)
     
     time_stamp = models.DateTimeField('date posted')
     
-    user_name = models.CharField(max_length = 255)
+    user_name = models.CharField(max_length = 280)
     
     sentiment = models.DecimalField(max_digits = 1, 
                                     decimal_places = 0)

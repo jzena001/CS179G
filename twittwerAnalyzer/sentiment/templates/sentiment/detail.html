@@ -1,1 +1,10 @@
-{{ tweet }}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'sentiment/style.css' %}">
+
+<header>{{header}} hashtag details</header>
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+
+<h2>Sentiment</h2>
+<img src="{% static "sentiment/sentiment_hist.png" %}" alt = "Histogram">
+
