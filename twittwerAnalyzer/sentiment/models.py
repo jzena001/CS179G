@@ -29,6 +29,8 @@ class Tweet(models.Model):
     
     time_stamp = models.DateTimeField('date posted')
     
+    tweeturl = models.CharField(max_length=128)
+    
     user_name = models.CharField(max_length = 280)
     
     sentiment = models.DecimalField(max_digits = 1, 

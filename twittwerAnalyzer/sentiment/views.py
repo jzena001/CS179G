@@ -12,24 +12,21 @@ from .models import Tweet
 def index(request):
     tweets = None
     counts = 0
+    search = ''
 
     if request.GET.get('search'):
         search = request.GET.get('search')
         # Search for hashtag or mention like search term
         #tweets_with_hashtags = Tweet.objects.filter(~Q(hashtag='') | ~Q(mention=''))
-        tweet_list = Tweet.objects.filter(Q(hashtag=search) | Q(mention=search))\
-                              .values('hashtag', 'mention', 'tweetkey', 
+        tweets = Tweet.objects.filter(Q(hashtag__search=search) | Q(mention__search=search))\
+                              .values('hashtag', 'mention', 'tweeturl', 
                                       'tweet', 'sentiment', 'user_name', 'time_stamp')
                                       
-        counts = tweet_list.count()
-        paginator = Paginator(tweet_list, 25) # Show only 25 tweets
-        page = request.GET.get('page')
-        tweets = paginator.get_page(page)
+        counts = tweets.count()
         # Render the results in the same page    
-        return render(request, 'sentiment/results.html', {'tweets': tweets, 
+    return render(request, 'sentiment/index.html', {'tweets': tweets, 
                                                     'counts':counts, 'search': search})
-    else:
-        return render(request, 'sentiment/index.html')
+        
 
 
 def detail(request, tag):
@@ -48,6 +45,7 @@ def detail(request, tag):
     
     positive_count = tweets.filter(sentiment='0').count()
     negative_count = tweets.filter(sentiment='1').count()
+    
     y_axis = [positive_count, negative_count]
     x_axis = ['positive', 'negative']
 
@@ -63,5 +61,5 @@ def detail(request, tag):
                                                      'counts': counts, 
                                                      'header': header,})
 
-def results(request, search):
-    return render(request, 'sentiment/results.html', {'search':search})
+#def results(request, search):
+#    return render(request, 'sentiment/results.html', {'search':search})

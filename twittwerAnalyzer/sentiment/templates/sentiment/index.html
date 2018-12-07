@@ -1,4 +1,5 @@
 {% load static %}
+{% load sentiment_extras %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'sentiment/style.css' %}">
 
@@ -11,3 +12,37 @@
 <input type="text" name="search">
 </form>
 <br/><br/>
+
+
+<table id="search_results">
+    <caption>Search results for {{search}}:  {{counts}} tweets</caption>
+    <thead>
+        <tr>
+        <th>Hashtag</th>
+        <th>Mention</th>
+        <th>User Name</th>
+        <th>Tweet URL</th>
+        <th>Tweet Text</th>
+        <th>Sentiment</th>
+        <th>Time Posted</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tweet in tweets %}
+        <tr>
+            <td><a href="{{ "hashtag/detail/"|concatenate:tweet.hashtag}}" target="_blank">{{tweet.hashtag}}</a></td>
+            <td><a href ="{{ "hashtag/detail/"|concatenate:tweet.mention }}" target = "_blank">{{tweet.mention}}</a></td>
+            <td>{{tweet.user_name}}</td>            
+            <td><a href ="{{tweet.tweeturl}}" target = "_blank"</a>{{tweet.tweeturl}}</td>
+            <td>{{tweet.tweet}}</td>
+            <td>{{tweet.sentiment}}</td>
+            <td>{{tweet.time_stamp}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>complete</td>
+        </tr>
+    </tfoot>
+</table>

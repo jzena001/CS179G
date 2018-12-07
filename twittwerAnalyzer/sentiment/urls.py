@@ -7,7 +7,7 @@ app_name = 'sentiment'
 urlpatterns = [
     path('', views.index, name='index'),
     # /sentiment/detail
-    path('<str:tag>/', views.detail, name='tag-detail'),
+    path('hashtag/detail/<str:tag>/', views.detail, name='tag-detail'),
     # /sentiment/results
-    path(r'^/page/(?P<page>\d+/$', views.results, name='search-results'),
+    #path('search/results/?page=<int:page>', views.results, name='search-results'),
 ]

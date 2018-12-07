@@ -1,16 +1,19 @@
 {% load static %}
+{% load sentiment_extras %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'sentiment/style.css' %}">
 
 <header>Search results for: {{search}}</header>
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
+<a href ="{% url 'sentiment:index' %}">Return to search</a>
+
 <div class="pagination">
     <span class="step-links">
+    
         {% if tweets.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{tweets.previous_page_number}}">previous"</a>
-            <p>We have a previous page</p>
+            <a href="search/results/?page=1">&laquo; first</a>            
+            <a href="search/reslts/?page={{ tweets.previous_page_number }}">previous"</a>            
         {% endif %}
         
         <span class="current">
@@ -18,10 +21,10 @@
         </span>
         
         {% if tweets.has_next %}
-            <a href="?page={{ tweets.next_page_number }}">next</a>
-            <a href="?page={{ tweets.paginator.num_pages }}">last &raquo;</a>
-            <p>We have a previous page</p>
+            <a href="search/results/?page={{ tweets.next_page_number }}">next</a>            
+            <a href="search/results/?page={{ tweets.paginator.num_pages }}">last &raquo;</a>            
         {% endif %}
+    
     </span>
 </div>    
 
@@ -42,8 +45,8 @@
     <tbody>
         {% for tweet in tweets %}
         <tr>
-            <td><a href="{{tweet.hashtag}} " target="_blank">{{tweet.hashtag}}</a></td>
-            <td><a href ="{{tweet.mention}}" target = "_blank">{{tweet.mention}}</a></td>
+            <td><a href="{{ "hashtag/detail/"|concatenate:tweet.hashtag}}" target="_blank">{{tweet.hashtag}}</a></td>
+            <td><a href ="{{ "hashtag/detail/"|concatenate:tweet.mention }}" target = "_blank">{{tweet.mention}}</a></td>
             <td>{{tweet.user_name}}</td>            
             <td>{{tweet.tweetkey}}</td>
             <td>{{tweet.tweet}}</td>

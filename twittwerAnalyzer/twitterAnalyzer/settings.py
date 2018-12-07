@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.postgres',
     'sentiment.apps.SentimentConfig',
     'django.contrib.admin',
     'django.contrib.auth',
