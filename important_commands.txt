@@ -1,0 +1,28 @@
+# url for development webapp
+localhost:8000/sentiment/
+
+#important commands:
+
+# Runs the django development server
+python manage.py runserver
+
+# Drops into python shell in django environment
+python manage.py shell
+
+# Generate the migrations (sql statements)
+# to create database and map to models
+python manage.py makemigrations sentiment
+
+# Checks the migrations (sql statements) 
+# that migrate will execute
+python manage.py sqlmigrate sentiment 0001 
+
+# Runs the migrations 
+python manage.py migrate
+
+# Checks what the effect of the migrations will be
+python manage.py check
+
+# To speed up SQL copy when there are many records in table
+vacuum threshold = autovacuum_vacuum_threshold + autovacuum_vacuum_scale_factor * number of rows in table  
+analyze threshold = autovacuum_analyze_threshold + autovacuum_analyze_scale_factor * number of rows in table
