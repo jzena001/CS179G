@@ -2,6 +2,23 @@
 --- 861309346
 --- Indeces to optimize most made queries.
 
+CREATE INDEX IF NOT EXISTS hashtag_fts_index
+ON sentiment_tweet
+USING GIN
+(to_tsvector('english', hashtag));
+
+CREATE INDEX IF NOT EXISTS mention_fts_index
+ON sentiment_tweet
+USING GIN
+(to_tsvector('english', mention));
+
+CREATE INDEX IF NOT EXISTS hashtag_mention_fts_index
+ON sentiment_tweet
+USING GIN
+((to_tsvector('english', mention)), (to_tsvector('english', hashtag)));
+
+
+
 CREATE INDEX IF NOT EXISTS hastag_mention_index
 ON sentiment_tweet
 USING BTREE
