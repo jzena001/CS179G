@@ -19,7 +19,7 @@ import string
 import json
 import re
 
-tweetsDate = "tweets20181122-23"
+tweetsDate = "tweets20181104"
 path = "/bherr006/rddTweets/" + tweetsDate + "*/*"
 
 
@@ -50,13 +50,15 @@ def getText(x):
    tweetText = re.sub(r'[\n\t\r,"|\\]', "", tweetText)
    if (not(checkEmpty(tweetText))):
       return tempList.append("")
-   
+  
+   tweetText = tweetText.lower()
+    
    tweetID = jsonTweet['id']
   
    tweetUser = jsonTweet['user']['screen_name'].encode('utf-8')
    tweetUser = re.sub(r'[^\x20-\x7E]+','', tweetUser)
    tweetUser = re.sub(r'[\n\t\r]', '', tweetUser)
-  
+   tweetUser = tweetUser.lower()
 
    hashtagTempList = tweetText.split(" ")   
    for i in range(len(hashtagTempList)):
@@ -67,6 +69,7 @@ def getText(x):
       tweetHashtag = ""
    else:
       tweetHashtag = hashtagList[0]
+      tweetHashtag = tweetHashtag.lower()
 
    mentionTempList = tweetText.split(" ")
    for i in range(len(mentionTempList)):
@@ -77,6 +80,7 @@ def getText(x):
       tweetMention = ""
    else:
       tweetMention = mentionList[0]
+      tweetMention = tweetMention.lower()
 
 
    
@@ -91,6 +95,8 @@ def getText(x):
       tweetLongitude = 0.0
       tweetLatitude = 0.0
    
+   tweetUrl = "https://twitter.com/" + tweetUser + "/status/" + str(tweetID)
+   
 
    tempList.append(tweetID)
    tempList.append(tweetUser)
@@ -101,6 +107,7 @@ def getText(x):
    tempList.append(tweetText)
    tempList.append(tweetHashtag)
    tempList.append(tweetMention)
+   tempList.append(tweetUrl)
    return tempList
 
 
@@ -108,7 +115,7 @@ lines = sc.read.text(path).rdd.map(lambda x: x[0])\
           .map(lambda x: getText(x))\
           .filter(lambda x: not(x == None))\
           .filter(lambda x: checkEmpty(x[0]))\
-          .map(lambda x: Row(id=x[0], user=x[1], timeStamp=x[2], geo=x[3], longitude=x[4], latitude=x[5], text=x[6], hashtag=x[7], mention=x[8]))
+          .map(lambda x: Row(id=x[0], user=x[1], timeStamp=x[2], geo=x[3], longitude=x[4], latitude=x[5], text=x[6], hashtag=x[7], mention=x[8], url=x[9]))
 
 
 df = sc.createDataFrame(lines)
@@ -135,7 +142,7 @@ converter = IndexToString(inputCol="prediction", outputCol="sentiment")
 result = nb.transform(test_model)
 
 result= result.drop("words", "tf", "features", "rawPrediction", "probability")
-result.show()
+result.show(10)
 
 
 result.write.csv("/bherr006/csvTweets/" + tweetsDate)
