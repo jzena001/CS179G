@@ -1,12 +1,15 @@
 {% load static %}
-
+<link href="{% static "sentiment/favicon.ico" %} rel="icon" type="image/x-icon" />
 <link rel="stylesheet" type="text/css" href="{% static 'sentiment/style.css' %}">
 
-<header>{{header}} hashtag details</header>
+<header> {{header}} hashtag details: {{counts}} total tweets</header>
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 <a href ="{% url 'sentiment:index' %}">Return to search</a>
 
-<h2>Sentiment</h2>
+
+<img src="{% static "sentiment/sentiment_piechart.png" %}" alt = "Histogram">
+
 <img src="{% static "sentiment/sentiment_hist.png" %}" alt = "Histogram">
 
+<img src="{% static "sentiment/sentiment_hour.png" %}" alt = "Histogram by Hour">
